@@ -4,7 +4,11 @@ import './App.css';
 import { Field, reduxForm } from 'redux-form';
 
 const onSubmit = (data) => {
-  console.log(data)
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve("submit success!")
+    }, 1000)
+  })
 }
 
 const customField = (field) => {
@@ -19,6 +23,7 @@ const customField = (field) => {
 
 const ContactForm = props => {
   const { handleSubmit } = props;
+  const submitText = props.submitting ? "Submitting" : "Submit";
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div>
@@ -29,13 +34,19 @@ const ContactForm = props => {
         <label htmlFor="customField">Custom Field</label>
         <Field name="customField" component={customField} />
       </div>
-      <input type="submit" />
+      <input type="submit" value={submitText} />
     </form>
   )
 }
 
+const onSubmitSuccessCallback = (response) => {
+  console.log('submit success callback called')
+  console.log(response)
+}
+
 const ContactFormReduxForm = reduxForm({
-  form: 'contact'
+  form: 'contact',
+  onSubmitSuccess: onSubmitSuccessCallback 
 })(ContactForm);
 
 class App extends Component {
